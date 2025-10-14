@@ -85,14 +85,14 @@ export default {
 
     // 手动定义的关卡路径
     const levelsSlugs = [
-      'Cosmetics/1', 'Kitchen/1', 'Christmas/1', 'Christmas/2', 'Christmas/3', 'Christmas/4', 'Christmas/5',
-      'Christmas/6', 'Christmas/7', 'Christmas/8', 'Christmas/9', 'Christmas/10', 'Halloween/1', 'Halloween/2',
-      'Halloween/3', 'Halloween/4', 'Halloween/5', 'Halloween/6', 'Halloween/7', 'Halloween/8', 'Halloween/9',
-      'Halloween/10', 'Halloween/11', 'Thanksgiving/1', 'Thanksgiving/2', 'Thanksgiving/3', 'Thanksgiving/4',
-      'Thanksgiving/5', 'Thanksgiving/6', 'Thanksgiving/7', 'Thanksgiving/8', 'Thanksgiving/9', 'Thanksgiving/10',
-      'Thanksgiving/11','Unpacking%20Memories/1','Mother%20and%20Child/1','Happy%20Woman\'s%20Day/1',
-      'Happy%20Valentine%20Day/1','/Happy%20New%20Year/1','/Happy%20New%20Year/2',
-      '/Happy%20New%20Year/3','/Happy%20New%20Year/4'
+      'cosmetics/1', 'kitchen/1', 'christmas/1', 'christmas/2', 'christmas/3', 'christmas/4', 'christmas/5',
+      'christmas/6', 'christmas/7', 'christmas/8', 'christmas/9', 'christmas/10', 'halloween/1', 'halloween/2',
+      'halloween/3', 'halloween/4', 'halloween/5', 'halloween/6', 'halloween/7', 'halloween/8', 'halloween/9',
+      'halloween/10', 'halloween/11', 'thanksgiving/1', 'thanksgiving/2', 'thanksgiving/3', 'thanksgiving/4',
+      'thanksgiving/5', 'thanksgiving/6', 'thanksgiving/7', 'thanksgiving/8', 'thanksgiving/9', 'thanksgiving/10',
+      'thanksgiving/11','unpacking-memories/1','mother-and-child/1','happy-womans-day/1',
+      'happy-valentine-day/1','/happy-new-year/1','/happy-new-year/2',
+      '/happy-new-year/3','/happy-new-year/4' 
     ];
 
     // 合并所有路径
