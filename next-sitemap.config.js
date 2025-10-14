@@ -1,157 +1,137 @@
-// next-sitemap.config.js
+import fs from 'fs';
+import path from 'path';
+
+// 读取 levels.json 文件
+const levelsData = JSON.parse(
+  fs.readFileSync(path.resolve('src/data/levels.json'), 'utf-8')
+);
+
+// URL 格式化函数 - 将分类名称转换为 URL 友好格式
+function formatCategoryForURL(category) {
+  return category
+    .toLowerCase()                   // 转换为小写
+    .replace(/\s+/g, '-')            // 将空格替换为连字符
+    .replace(/[^\w-]+/g, '')         // 移除非单词字符
+    .replace(/--+/g, '-')            // 替换多个连字符为单个
+    .replace(/^-+/, '')              // 移除开头的连字符
+    .replace(/-+$/, '');             // 移除结尾的连字符
+}
+
 export default {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.hexasortlevel.com/',
-  generateRobotsTxt: true,
-  sitemapSize: 7000,
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.perfecttidyhub.com/',
+  generateRobotsTxt: false,
+  generateIndexSitemap: false,
+  sitemapSize: 50000,
+  changefreq: 'daily',
+  priority: 0.7,
+  autoLastmod: true,
 
-  // 生成额外的路径（静态和动态）
-  additionalPaths: async (config) => {
-    const paths = [
-      '/', // 首页
-      '/privacy',
-      '/terms',
-      '/playonline',
-      '/download',
-      // 添加其他静态页面路径
-    ];
+  // 排除包含分类的路径
+  exclude: [
+    '/levels/normal/*', // 只排除 normal 类型的路径
+  ],
 
-    // 动态博客页面路径（根据你的需求，循环生成动态博客页面）
-    const blogSlugs = ['hexa-sort-lion-studios-casual-puzzle-leader','flawed-design-hexa-sort-hexagonal-elimination']; // 假设有这些动态 slugs
-    
-    // 验证每个 slug 是否存在
-    for (const slug of blogSlugs) {
-      const url = `https://www.hexasortlevel.com/blogs/${slug}`;
+  // 转换函数，强制使用简洁URL
+  transform: async (config, path) => {
+    // 查找是否为 levels 路径
+    if (path.match(/\/levels\/\w+\/\d+/i)) {
+      const parts = path.split('/');
+      const category = parts[2]; // 获取分类（如 normal、halloween 等）
+      const levelId = parts[3]; // 获取 levelId
 
-      // 使用 fetch 或其他方法来检查 URL 是否存在
-      try {
-        const res = await fetch(url);
-        if (res.ok) {
-          // 如果 URL 存在，加入到路径中
-          paths.push(`/blogs/${slug}`);
-        } else {
-          // 如果 URL 不存在，跳过
-          console.log(`Skipping invalid URL: ${url}`);
-        }
-      } catch (error) {
-        // 如果发生错误（如连接失败），也跳过
-        console.log(`Error fetching URL: ${url}`);
+      // 如果是 normal，转换为简洁路径
+      if (category === 'normal') {
+        path = `/levels/${levelId}`;
+      } else {
+        // 其他分类：先解码，然后转换为 URL 友好格式
+        const decodedCategory = decodeURIComponent(category);
+        const urlFriendlyCategory = formatCategoryForURL(decodedCategory);
+        path = `/levels/${urlFriendlyCategory}/${levelId}`;
       }
     }
 
-    return paths.map(path => ({
+    return {
       loc: path,
-      changefreq: 'daily',
-      priority: path === '/' ? 1.0 : 0.7,
+      changefreq: config.changefreq,
+      priority: config.priority,
+      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+    };
+  },
+
+  // 手动生成所有路径
+  additionalPaths: async (config) => {
+    // 静态页面路径
+    const staticPaths = [
+      '/',
+      '/privacy', 
+      '/terms',
+      '/playonline',
+      '/download',
+      '/levels',
+      '/blogs',
+    ];
+
+    // 动态博客页面路径
+    const blogSlugs = ['expert-perfect-tidy-levels-walkthrough'];
+
+    // 动态关卡页面路径 - 使用简洁URL
+    const levelPaths = levelsData.map(level => {
+      const { category, id } = level;
+      if (category === 'normal') {
+        return `/levels/${id}`;
+      } 
+      return null;
+    }).filter(path => path !== null); // 过滤 null
+
+    // 手动定义的关卡路径
+    const levelsSlugs = [
+      'Cosmetics/1', 'Kitchen/1', 'Christmas/1', 'Christmas/2', 'Christmas/3', 'Christmas/4', 'Christmas/5',
+      'Christmas/6', 'Christmas/7', 'Christmas/8', 'Christmas/9', 'Christmas/10', 'Halloween/1', 'Halloween/2',
+      'Halloween/3', 'Halloween/4', 'Halloween/5', 'Halloween/6', 'Halloween/7', 'Halloween/8', 'Halloween/9',
+      'Halloween/10', 'Halloween/11', 'Thanksgiving/1', 'Thanksgiving/2', 'Thanksgiving/3', 'Thanksgiving/4',
+      'Thanksgiving/5', 'Thanksgiving/6', 'Thanksgiving/7', 'Thanksgiving/8', 'Thanksgiving/9', 'Thanksgiving/10',
+      'Thanksgiving/11','Unpacking%20Memories/1','Mother%20and%20Child/1','Happy%20Woman\'s%20Day/1',
+      'Happy%20Valentine%20Day/1','/Happy%20New%20Year/1','/Happy%20New%20Year/2',
+      '/Happy%20New%20Year/3','/Happy%20New%20Year/4'
+    ];
+
+    // 合并所有路径
+    const allPaths = [
+      ...staticPaths,
+      ...blogSlugs.map(slug => `/blogs/${slug}`),
+      ...levelsSlugs.map(slug => `/levels/${slug}`), // 手动生成的路径
+      ...levelPaths // 动态生成的路径
+    ];
+
+    return allPaths.map(path => ({
+      loc: path,
+      changefreq: path === '/' ? 'daily' : 'weekly',
+      priority: path === '/' ? 1.0 : (typeof path === 'string' && path.startsWith('/blogs/') ? 0.8 : 0.7),
       lastmod: new Date().toISOString(),
     }));
   },
 
-  // 处理动态路径
-  transform: async (config, path) => {
-    // 针对动态路径的特殊处理
-    if (path.startsWith('/blogs/')) {
-      // 对博客页面进行处理，只有有效的页面才会被添加
-      const res = await fetch(`https://www.hexasortlevel.com${path}`);
-      if (!res.ok) {
-        // 如果博客页面不存在，返回 null 来排除该页面
-        return null;
-      }
-
-      return {
-        loc: path,
-        changefreq: 'daily',
-        priority: 0.7,
-        lastmod: new Date().toISOString(),
-      };
-    }
-
-    // 对其他静态页面路径的处理
-    return {
-      loc: path,
-      changefreq: 'daily',
-      priority: path === '/' ? 1.0 : 0.7,
-      lastmod: new Date().toISOString(),
-    };
-  },
-
-  
-    robotsTxtOptions: {
-        policies: [
-          // 常规搜索引擎规则
-          {
-            userAgent: '*',
-            allow: '/',
-          },
-    
-          // 专用 AI 爬虫 - 仅允许访问 llms 文件
-          {
-            userAgent: 'GPTBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',
-          },
-          {
-            userAgent: 'ChatGPT-User',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'OAI-SearchBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'Claude-Web',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'Anthropic-AI',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'ClaudeBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'PerplexityBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'DeepseekBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'cohere-ai',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'YouBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'GoogleOther',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'DuckAssistBot',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-          {
-            userAgent: 'Bytespider',
-            disallow: '/',
-            Allow: '/llms.txt' ,
-            Allow: '/llms-full.txt',          },
-        ],
-        additionalSitemaps: [],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: '/',
       },
-  }
-  
+      {
+        userAgent: 'GPTBot',
+        allow: ['/llms.txt', '/llms-full.txt'],
+        disallow: '/',
+      },
+      {
+        userAgent: 'ChatGPT-User', 
+        allow: ['/llms.txt', '/llms-full.txt'],
+        disallow: '/',
+      },
+      {
+        userAgent: 'ClaudeBot',
+        allow: ['/llms.txt', '/llms-full.txt'],
+        disallow: '/',
+      }
+    ],
+  },
+};

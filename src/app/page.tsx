@@ -21,6 +21,7 @@ export default function Home() {
       <About />
       <FAQ />
       <PlayNow />
+      
       <ShareButtons url={shareUrl} text={shareText} />
     </>
   );

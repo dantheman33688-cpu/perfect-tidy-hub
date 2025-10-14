@@ -133,8 +133,8 @@ export default function LevelSelector() {
     setLoading(false);
   };
   
-  const handleLevelSelect = (levelId: number) => {
-    window.open(`/levels/${levelId}`, '_blank');
+  const handleLevelSelect = (levelId: number, category: string) => {
+    window.open(`/levels/${category}/${levelId}`, '_blank');
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,8 +273,8 @@ export default function LevelSelector() {
                       title={level.title}
                       thumbnail={level.thumb}
                       category={level.category}
-                      onSelect={handleLevelSelect}
-                    />
+                      onSelect={(levelId) => handleLevelSelect(levelId, level.category)} // 修改这里
+                      />
                   ))}
                 </div>
               </>

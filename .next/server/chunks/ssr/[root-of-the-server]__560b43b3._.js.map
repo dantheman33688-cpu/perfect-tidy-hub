@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 11, "column": 0}, "map": {"version":3,"sources":["file:///Users/zhanglei/perfect-tidy-hub/src/app/levels/%5Bcategory%5D/page.tsx"],"sourcesContent":["// src/app/levels/[category]/page.tsx\nimport { permanentRedirect } from 'next/navigation';\nimport { Metadata } from 'next';\n\nexport async function generateMetadata(): Promise<Metadata> {\n  return {\n    robots: {\n      index: false,\n      follow: false,\n    },\n  };\n}\n\nexport default function CategoryPage() {\n  // 使用301永久重定向\n  permanentRedirect('/levels');\n}"],"names":[],"mappings":"AAAA,qCAAqC;;;;;;;AACrC;AAAA;;AAGO,eAAe;IACpB,OAAO;QACL,QAAQ;YACN,OAAO;YACP,QAAQ;QACV;IACF;AACF;AAEe,SAAS;IACtB,aAAa;IACb,IAAA,0MAAiB,EAAC;AACpB","debugId":null}}]
+}

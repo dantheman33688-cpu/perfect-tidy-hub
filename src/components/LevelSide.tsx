@@ -28,6 +28,7 @@ interface LevelSideProps {
   prevLevel?: { id: number; title: string };
   nextLevel?: { id: number; title: string };
   adjacentLevels: { id: number; title: string }[];
+  category: string; // 添加分类参数
 }
 
 export default function LevelSide({
@@ -35,6 +36,7 @@ export default function LevelSide({
   prevLevel,
   nextLevel,
   adjacentLevels,
+  category // 添加分类参数
 }: LevelSideProps) {
   return (
     <aside className="w-full max-w-md bg-white rounded-xl shadow-md p-6 space-y-6">
@@ -42,7 +44,8 @@ export default function LevelSide({
       <div className="space-y-4">
         {prevLevel && (
           <Link
-            href={`/levels/${prevLevel.id}`}
+            // 修改链接，添加分类参数
+            href={`/levels/${category}/${prevLevel.id}`}
             className="block p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
           >
             <div className="text-xs text-gray-500 mb-2">Previous Level</div>
@@ -60,7 +63,8 @@ export default function LevelSide({
 
         {nextLevel && (
           <Link
-            href={`/levels/${nextLevel.id}`}
+            // 修改链接，添加分类参数
+            href={`/levels/${category}/${nextLevel.id}`}
             className="block p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
           >
             <div className="text-xs text-gray-500 mb-2">Next Level</div>
@@ -81,7 +85,8 @@ export default function LevelSide({
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-semibold text-gray-800">Adjacent Levels</h3>
-          <Link href="/levels" className="text-sm text-blue-600 hover:underline">
+          {/* 修改链接，添加分类参数 */}
+          <Link href={`/levels/${category}`} className="text-sm text-blue-600 hover:underline">
             All Levels →
           </Link>
         </div>
@@ -91,7 +96,8 @@ export default function LevelSide({
           {adjacentLevels.map((level) => (
             <Link
               key={level.id}
-              href={`/levels/${level.id}`}
+              // 修改链接，添加分类参数
+              href={`/levels/${category}/${level.id}`}
               className={`flex items-center justify-center h-12 rounded-lg border-2 text-sm font-medium transition-all ${
                 level.id === currentLevel
                   ? "bg-blue-100 border-blue-500 text-blue-700 shadow-sm"
@@ -109,7 +115,7 @@ export default function LevelSide({
         <div className="text-sm text-gray-600 mb-3">Want to play games directly?</div>
         <div className="text-gray-800 font-medium mb-2">Play Perfect Tidy Online!</div>
         <Link
-          href="/play"
+          href="/playonline"
           className="block w-full bg-blue-600 text-white text-center py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
         >
           Play Now
