@@ -19,57 +19,53 @@ interface Level {
 
 // 定义固定的分类顺序（与图片一致）
 const FIXED_CATEGORY_ORDER = [
-  'Normal Levels',
-  'Christmas',
-  'Cosmetics',
-  'Halloween',
-  'Happy New Year',
-  'Happy Valentine Day',
-  'Happy Woman\'s Day',
-  'Kitchen',
-  'Mother and Child',
-  'Summer Vibe',
-  'Thanksgiving',
-  'Unpacking Memories'
+  'normal',
+  'christmas',
+  'cosmetics',
+  'halloween',
+  'happy-new-year',
+  'happy-valentine-day',
+  'happy-womans-day',
+  'kitchen',
+  'mother-and-child',
+  'summer-vibe',
+  'thanksgiving',
+  'unpacking-memories'
 ];
 
-// 添加获取关卡URL的函数
-const getLevelUrl = (category: string, levelId: number): string => {
-  // 定义分类到简洁URL的映射
-  const categorySlugMap: Record<string, string> = {
-    'normal': 'normal',
-    'Normal Levels': 'normal',
-    'Christmas': 'christmas',
-    'Cosmetics': 'cosmetics',
-    'Halloween': 'halloween',
-    'Happy New Year': 'happy-new-year',
-    'Happy Valentine Day': 'happy-valentine-day',
-    'Happy Woman\'s Day': 'happy-womans-day',
-    'Kitchen': 'kitchen',
-    'Mother and Child': 'mother-and-child',
-    'Summer Vibe': 'summer-vibe',
-    'Thanksgiving': 'thanksgiving',
-    'Unpacking Memories': 'unpacking-memories'
+// 将连字符格式的分类名称转换为显示名称
+function getDisplayName(category: string): string {
+  const displayMap: Record<string, string> = {
+    'normal': 'Normal',
+    'christmas': 'Christmas',
+    'cosmetics': 'Cosmetics',
+    'halloween': 'Halloween',
+    'happy-new-year': 'Happy New Year',
+    'happy-valentine-day': 'Happy Valentine Day',
+    'happy-womans-day': 'Happy Woman\'s Day',
+    'kitchen': 'Kitchen',
+    'mother-and-child': 'Mother and Child',
+    'summer-vibe': 'Summer Vibe',
+    'thanksgiving': 'Thanksgiving',
+    'unpacking-memories': 'Unpacking Memories'
   };
   
-  // 获取分类的简洁形式
-  const categorySlug = categorySlugMap[category] || category.toLowerCase().replace(/\s+/g, '-');
-  
+  return displayMap[category] || category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+// 获取关卡URL
+const getLevelUrl = (category: string, levelId: number): string => {
   // 对于 normal 分类使用简洁 URL，其他使用详细 URL
-  return categorySlug === 'normal' 
+  return category === 'normal' 
     ? `/levels/${levelId}`
-    : `/levels/${categorySlug}/${levelId}`;
+    : `/levels/${category}/${levelId}`;
 };
 
 const getCategories = (): string[] => {
   // 从数据中提取所有分类
-  const dataCategories = Array.from(new Set(levelsData.map(level => {
-    // 将数据中的分类名称映射到显示名称
-    if (level.category === 'normal') return 'Normal Levels';
-    return level.category;
-  })));
+  const dataCategories = Array.from(new Set(levelsData.map(level => level.category)));
   
-  // 按照固定顺序排序，确保Normal Levels在最前面
+  // 按照固定顺序排序，确保normal在最前面
   return FIXED_CATEGORY_ORDER.filter(category => 
     dataCategories.includes(category)
   );
@@ -97,7 +93,7 @@ const generateLevelRanges = (): LevelRange[] => {
 
 export default function LevelSelector() {
   const categories = getCategories();
-  const [selectedCategory, setSelectedCategory] = useState<string>('Normal Levels');
+  const [selectedCategory, setSelectedCategory] = useState<string>('normal');
   const [selectedRange, setSelectedRange] = useState<LevelRange>({ 
     start: 1, 
     end: 30, 
@@ -107,17 +103,16 @@ export default function LevelSelector() {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showAllRanges, setShowAllRanges] = useState<boolean>(false);
+  const [showAllCategories, setShowAllCategories] = useState<boolean>(false); // 新增：控制分类显示
   
   const levelRanges = generateLevelRanges();
   const visibleRanges = showAllRanges ? levelRanges : levelRanges.slice(0, 5);
+  const visibleCategories = showAllCategories ? categories : categories.slice(0, 6); // 默认显示前6个分类
   
   // 根据搜索词过滤关卡，并按关卡ID从小到大排序
   const filteredLevels = levelsInRange
     .filter(level => {
-      const categoryMatch = selectedCategory === 'Normal Levels' 
-        ? level.category === 'normal'
-        : level.category === selectedCategory;
-      
+      const categoryMatch = level.category === selectedCategory;
       const searchMatch = level.id.toString().includes(searchTerm) || 
         level.title.toLowerCase().includes(searchTerm.toLowerCase());
       
@@ -132,12 +127,7 @@ export default function LevelSelector() {
     
     // 立即更新显示的数据，并按关卡ID排序
     const filtered = levelsData
-      .filter(level => {
-        if (category === 'Normal Levels') {
-          return level.category === 'normal' && level.id >= 1 && level.id <= 30;
-        }
-        return level.category === category && level.id >= 1 && level.id <= 30;
-      })
+      .filter(level => level.category === category && level.id >= 1 && level.id <= 30)
       .sort((a, b) => a.id - b.id); // 按关卡ID从小到大排序
     
     setLevelsInRange(filtered);
@@ -149,12 +139,7 @@ export default function LevelSelector() {
     
     // 筛选数据并按关卡ID排序
     const filtered = levelsData
-      .filter(level => {
-        if (selectedCategory === 'Normal Levels') {
-          return level.category === 'normal' && level.id >= range.start && level.id <= range.end;
-        }
-        return level.category === selectedCategory && level.id >= range.start && level.id <= range.end;
-      })
+      .filter(level => level.category === selectedCategory && level.id >= range.start && level.id <= range.end)
       .sort((a, b) => a.id - b.id); // 按关卡ID从小到大排序
     
     setLevelsInRange(filtered);
@@ -174,12 +159,14 @@ export default function LevelSelector() {
     setShowAllRanges(!showAllRanges);
   };
   
+  const toggleCategoriesVisibility = () => {
+    setShowAllCategories(!showAllCategories);
+  };
+  
   useEffect(() => {
     // 初始化加载数据，并按关卡ID排序
     const initialData = levelsData
-      .filter(level => 
-        level.category === 'normal' && level.id >= 1 && level.id <= 30
-      )
+      .filter(level => level.category === 'normal' && level.id >= 1 && level.id <= 30)
       .sort((a, b) => a.id - b.id); // 按关卡ID从小到大排序
     
     setLevelsInRange(initialData);
@@ -217,7 +204,7 @@ export default function LevelSelector() {
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-blue-600 mb-4 text-center">Select Category</h3>
           <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
+            {visibleCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategorySelect(category)}
@@ -227,9 +214,32 @@ export default function LevelSelector() {
                     : 'bg-white text-blue-600 border border-blue-200 hover:bg-blue-50'
                 }`}
               >
-                {category}
+                {getDisplayName(category)}
               </button>
             ))}
+            
+            {categories.length > 6 && (
+              <button
+                onClick={toggleCategoriesVisibility}
+                className="px-5 py-3 rounded-xl text-base font-medium bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 transition-all duration-200 flex items-center"
+              >
+                {showAllCategories ? (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7-7" />
+                    </svg>
+                    Show Less
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                    Show More ({categories.length - 6})
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
         
@@ -284,14 +294,14 @@ export default function LevelSelector() {
             {filteredLevels.length === 0 ? (
               <div className="text-center py-10">
                 <p className="text-lg text-gray-600">
-                  {searchTerm ? 'No levels found matching your search.' : `No ${selectedCategory} levels found in this range.`}
+                  {searchTerm ? 'No levels found matching your search.' : `No ${getDisplayName(selectedCategory)} levels found in this range.`}
                 </p>
               </div>
             ) : (
               <>
                 <div className="mb-4 text-center">
                   <p className="text-lg text-blue-600">
-                    Showing {filteredLevels.length} {selectedCategory} levels (sorted by level ID)
+                    Showing {filteredLevels.length} {getDisplayName(selectedCategory)} levels (sorted by level ID)
                   </p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">

@@ -10,47 +10,43 @@ const nextConfig: NextConfig = {
         source: '/levels/:id(\\d+)',
         destination: '/levels/normal/:id',
       },
-      // 其他分类的重写 - 使用正确的分类名称
+      // 其他分类使用简单的映射
       {
-        source: '/levels/happy-womans-day/:id(\\d+)',
-        destination: '/levels/Happy Woman\'s Day/:id',
+        source: '/levels/happy_valentine_day/:id(\\d+)',
+        destination: '/levels/happy_valentine_day/:id',
       },
       {
-        source: '/levels/happy-valentine-day/:id(\\d+)',
-        destination: '/levels/Happy Valentine Day/:id',
+        source: '/levels/happy_new_year/:id(\\d+)',
+        destination: '/levels/happy_new_year/:id',
       },
       {
-        source: '/levels/happy-new-year/:id(\\d+)',
-        destination: '/levels/Happy New Year/:id',
+        source: '/levels/mother_and_child/:id(\\d+)',
+        destination: '/levels/mother_and_child/:id',
       },
       {
-        source: '/levels/mother-and-child/:id(\\d+)',
-        destination: '/levels/Mother and Child/:id',
+        source: '/levels/summer_vibe/:id(\\d+)',
+        destination: '/levels/summer_vibe/:id',
       },
       {
-        source: '/levels/summer-vibe/:id(\\d+)',
-        destination: '/levels/Summer Vibe/:id',
+        source: '/levels/unpacking_memories/:id(\\d+)',
+        destination: '/levels/unpacking_memories/:id',
       },
+      // 单单词分类保持不变
       {
-        source: '/levels/unpacking-memories/:id(\\d+)',
-        destination: '/levels/Unpacking Memories/:id',
-      },
-      // 以下分类如果名称就是单数形式，保持原样
-      {
-        source: '/levels/christmas/:id(\\d+)',
-        destination: '/levels/Christmas/:id',
+        source: '/levels/Christmas/:id(\\d+)',
+        destination: '/levels/christmas/:id',
       },
       {
         source: '/levels/halloween/:id(\\d+)',
-        destination: '/levels/Halloween/:id',
+        destination: '/levels/halloween/:id',
       },
       {
         source: '/levels/kitchen/:id(\\d+)',
-        destination: '/levels/Kitchen/:id',
+        destination: '/levels/kitchen/:id',
       },
       {
         source: '/levels/thanksgiving/:id(\\d+)',
-        destination: '/levels/Thanksgiving/:id',
+        destination: '/levels/thanksgiving/:id',
       },
     ];
   },
