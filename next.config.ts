@@ -10,30 +10,32 @@ const nextConfig: NextConfig = {
         source: '/levels/:id(\\d+)',
         destination: '/levels/normal/:id',
       },
+      // 其他分类的重写 - 使用正确的分类名称
       {
         source: '/levels/happy-womans-day/:id(\\d+)',
-        destination: '/levels/Happy%20Woman\'s%20Day/:id',
+        destination: '/levels/Happy Woman\'s Day/:id',
       },
       {
         source: '/levels/happy-valentine-day/:id(\\d+)',
-        destination: '/levels/Happy%20Valentine%20Day/:id',
+        destination: '/levels/Happy Valentine Day/:id',
       },
       {
         source: '/levels/happy-new-year/:id(\\d+)',
-        destination: '/levels/Happy%20New%20Year/:id',
+        destination: '/levels/Happy New Year/:id',
       },
       {
         source: '/levels/mother-and-child/:id(\\d+)',
-        destination: '/levels/Mother%20and%20Child/:id',
+        destination: '/levels/Mother and Child/:id',
       },
       {
         source: '/levels/summer-vibe/:id(\\d+)',
-        destination: '/levels/Summer%20Vibe/:id',
+        destination: '/levels/Summer Vibe/:id',
       },
       {
         source: '/levels/unpacking-memories/:id(\\d+)',
-        destination: '/levels/Unpacking%20Memories/:id',
+        destination: '/levels/Unpacking Memories/:id',
       },
+      // 以下分类如果名称就是单数形式，保持原样
       {
         source: '/levels/christmas/:id(\\d+)',
         destination: '/levels/Christmas/:id',
@@ -57,7 +59,6 @@ const nextConfig: NextConfig = {
     // Force Webpack to be used instead of Turbopack
     config.experiments = {
       topLevelAwait: true,
-      // 禁用 TuroPack，强制使用 Webpack
     };
     return config;
   },

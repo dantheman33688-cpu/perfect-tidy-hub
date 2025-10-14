@@ -3,7 +3,8 @@ import data from "@/data/levels.json";
 import LevelDetail from "@/components/LevelDetail";
 import Levels from "@/components/Levels";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import Head from 'next/head'; // 添加 Head 组件导入
 
 // 定义 Level 类型
 interface Level {
@@ -20,6 +21,36 @@ function normalizeCategory(category: string): string {
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// 获取分类的简洁URL形式
+function getCategorySlug(category: string): string {
+  const normalized = normalizeCategory(category);
+  
+  // 定义分类到简洁URL的映射
+  const categoryMap: Record<string, string> = {
+    'normal': 'normal',
+    'happy woman\'s day': 'happy-womans-day',
+    'happy valentine day': 'happy-valentine-day',
+    'happy new year': 'happy-new-year',
+    'mother and child': 'mother-and-child',
+    'summer vibe': 'summer-vibe',
+    'unpacking memories': 'unpacking-memories',
+    'christmas': 'christmas',
+    'halloween': 'halloween',
+    'kitchen': 'kitchen',
+    'thanksgiving': 'thanksgiving'
+  };
+  
+  return categoryMap[normalized] || category.toLowerCase().replace(/\s+/g, '-');
+}
+
+// 获取规范URL
+function getCanonicalUrl(level: Level): string {
+  const categorySlug = getCategorySlug(level.category);
+  return categorySlug === 'normal' 
+    ? `/levels/${level.id}`
+    : `/levels/${categorySlug}/${level.id}`;
 }
 
 // 动态生成元数据
@@ -48,9 +79,15 @@ export async function generateMetadata({ params }: {
       };
     }
     
+    // 获取规范URL
+    const canonicalUrl = getCanonicalUrl(level);
+    
     return {
       title: `${level.title} - Perfect Tidy Walkthrough`,
       description: `Complete walkthrough and solutions for ${level.title}. Find tips and strategies to master this level.`,
+      alternates: {
+        canonical: canonicalUrl,
+      },
     };
   } catch (error) {
     return {
@@ -90,16 +127,13 @@ export default async function Page({ params }: {
     });
     
     if (!level) {
-      // 尝试查找任何匹配ID的关卡
-      const anyLevelWithSameId = levels.find(l => l.id === levelId);
-      if (anyLevelWithSameId) {
-        // 重定向到正确的分类URL
-        const correctCategory = encodeURIComponent(anyLevelWithSameId.category);
-        redirect(`/levels/${correctCategory}/${levelId}`);
-      }
+      // 不再使用重定向，直接返回404
       notFound();
     }
 
+    // 获取规范URL
+    const canonicalUrl = getCanonicalUrl(level);
+    
     // 获取当前关卡在所属分类中的位置
     const categoryLevels = levels.filter(l => 
       normalizeCategory(l.category) === normalizedCategory
@@ -116,6 +150,11 @@ export default async function Page({ params }: {
 
     return (
       <>
+        {/* 添加规范链接 */}
+        <Head>
+          <link rel="canonical" href={canonicalUrl} />
+        </Head>
+        
         <LevelDetail 
           level={level} 
           prev={prev} 

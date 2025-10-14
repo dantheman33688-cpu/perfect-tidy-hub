@@ -33,6 +33,34 @@ const FIXED_CATEGORY_ORDER = [
   'Unpacking Memories'
 ];
 
+// 添加获取关卡URL的函数
+const getLevelUrl = (category: string, levelId: number): string => {
+  // 定义分类到简洁URL的映射
+  const categorySlugMap: Record<string, string> = {
+    'normal': 'normal',
+    'Normal Levels': 'normal',
+    'Christmas': 'christmas',
+    'Cosmetics': 'cosmetics',
+    'Halloween': 'halloween',
+    'Happy New Year': 'happy-new-year',
+    'Happy Valentine Day': 'happy-valentine-day',
+    'Happy Woman\'s Day': 'happy-womans-day',
+    'Kitchen': 'kitchen',
+    'Mother and Child': 'mother-and-child',
+    'Summer Vibe': 'summer-vibe',
+    'Thanksgiving': 'thanksgiving',
+    'Unpacking Memories': 'unpacking-memories'
+  };
+  
+  // 获取分类的简洁形式
+  const categorySlug = categorySlugMap[category] || category.toLowerCase().replace(/\s+/g, '-');
+  
+  // 对于 normal 分类使用简洁 URL，其他使用详细 URL
+  return categorySlug === 'normal' 
+    ? `/levels/${levelId}`
+    : `/levels/${categorySlug}/${levelId}`;
+};
+
 const getCategories = (): string[] => {
   // 从数据中提取所有分类
   const dataCategories = Array.from(new Set(levelsData.map(level => {
@@ -134,7 +162,8 @@ export default function LevelSelector() {
   };
   
   const handleLevelSelect = (levelId: number, category: string) => {
-    window.open(`/levels/${category}/${levelId}`, '_blank');
+    const url = getLevelUrl(category, levelId);
+    window.open(url, '_blank');
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,8 +302,8 @@ export default function LevelSelector() {
                       title={level.title}
                       thumbnail={level.thumb}
                       category={level.category}
-                      onSelect={(levelId) => handleLevelSelect(levelId, level.category)} // 修改这里
-                      />
+                      onSelect={(levelId) => handleLevelSelect(levelId, level.category)}
+                    />
                   ))}
                 </div>
               </>
