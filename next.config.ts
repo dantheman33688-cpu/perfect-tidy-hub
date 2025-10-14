@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   // 使用重写将简洁URL映射到实际页面
   async rewrites() {
     return [
-      // 将简洁URL映射到实际页面
       {
         source: '/levels/:id(\\d+)',
         destination: '/levels/normal/:id',
@@ -53,11 +52,16 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
+
   webpack(config: Configuration) {
+    // Force Webpack to be used instead of Turbopack
+    config.experiments = {
+      topLevelAwait: true,
+      // 禁用 TuroPack，强制使用 Webpack
+    };
     return config;
   },
-  
+
   images: {
     remotePatterns: [
       {
