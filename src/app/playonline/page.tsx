@@ -2,8 +2,9 @@
 import { Metadata } from 'next';
 import GameDetail from "@/components/GameDetail";
 import Levels from "@/components/Levels";
-import PlayNow from "@/components/PlayNow";
 import Image from 'next/image';
+import Ads from "@/components/Ads";
+
 
 export const metadata: Metadata = {
   title: 'Play Perfect Tidy Online - Free ASMR Organizing Game',
@@ -120,6 +121,8 @@ export default function HexaSortPage() {
             }
           />
         </section>
+
+        <Ads />
         
         {/* 关卡选择区块 */}
         <section className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl shadow-sm border border-gray-100 p-6">

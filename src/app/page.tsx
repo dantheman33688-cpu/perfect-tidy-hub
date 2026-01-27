@@ -4,6 +4,8 @@ import Features from "@/components/Features";
 import Download from "@/components/Download";
 import About from "@/components/About";
 import FAQ from "@/components/FAQ";
+import Ads from "@/components/Ads";
+
 import PlayNow from "@/components/PlayNow";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -15,6 +17,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <Ads />
       <Levels />
       <Features />
       <Download />

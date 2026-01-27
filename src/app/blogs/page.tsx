@@ -2,6 +2,8 @@ import Link from "next/link";
 import { post1 } from "@/components/blogs/p1";
 import { post2 } from "@/components/blogs/p2";
 import { post3 } from "@/components/blogs/p3";
+import Ads from "@/components/Ads";
+
 
 // 定义博客文章类型
 interface BlogPost {
@@ -56,6 +58,9 @@ export default function BlogListPage() {
       <div className="min-h-screen bg-[#f0f4f8] py-12">
         <div className="max-w-4xl mx-auto px-4">
           <h1 className="text-3xl font-bold text-blue-600 mb-8">Perfect Tidy Blog</h1>
+          
+          {/* ✅ 广告位：标题下方 */}
+          <Ads />
 
           <div className="space-y-8">
             {blogPosts.map(post => (

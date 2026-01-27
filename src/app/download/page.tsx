@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import Download from "@/components/Download"; // 假设这个组件包含下载按钮和标题
 import Levels from "@/components/Levels";
 import PerfectTidyDownloadFAQ from '@/components/DownloadFAQ'; // 您的 FAQ 组件
+import Ads from "@/components/Ads";
+
 
 // --- SEO 元数据替换开始 ---
 export const metadata: Metadata = {
@@ -34,6 +36,9 @@ export default function PerfectTidyDownloadPage() {
     <main>
       {/* 1. 下载组件 (包含标题和下载按钮) */}
       <Download /> 
+
+      {/* ✅ 广告位 */}
+      <Ads />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
           <PerfectTidyDownloadFAQ />

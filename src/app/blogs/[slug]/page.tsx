@@ -7,6 +7,8 @@ import BlogPostHeader from '@/components/BlogPostHeader';
 import BlogPostContent from '@/components/BlogPostContent';
 import RelatedArticles from '@/components/RelatedArticles';
 import type { Metadata } from 'next';
+import Ads from "@/components/Ads";
+
 
 const blogPosts = [
   { ...post1, date: "2025-10-10", author: "Perfect Tidy Team", readTime: "5 min read" },
@@ -32,6 +34,10 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           readTime={post.readTime || "Unknown"} 
         />
         <BlogPostContent content={post.content} />
+
+        {/* ✅ 广告位 */}
+        <Ads />
+
         <RelatedArticles postSlug={post.slug} blogPosts={blogPosts} />
       </div>
     </div>
