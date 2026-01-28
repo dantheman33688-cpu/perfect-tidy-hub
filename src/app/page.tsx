@@ -6,6 +6,7 @@ import About from "@/components/About";
 import FAQ from "@/components/FAQ";
 import Ads from "@/components/Ads";
 
+
 import PlayNow from "@/components/PlayNow";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -17,6 +18,10 @@ export default function Home() {
   return (
     <>
       <Hero />
+
+       {/* 在这里添加广告，广告会显示在 Hero 和 Levels 之间 */}
+       <Ads />
+       
       <Ads />
       <Levels />
       <Features />

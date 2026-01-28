@@ -1,10 +1,9 @@
-// src/app/levels/[category]/[id]/page.tsx
 import data from "@/data/levels.json";
 import LevelDetail from "@/components/LevelDetail";
 import Levels from "@/components/Levels";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Head from 'next/head';
+import Ads from "@/components/Ads"; // 引入广告组件
 
 // 定义 Level 类型
 interface Level {
@@ -115,6 +114,10 @@ export default async function Page({ params }: {
           adjacent={adjacent}
           category={displayCategory}
         />
+        
+        {/* 广告组件 */}
+        <Ads />
+        
         <Levels />
       </>
     );

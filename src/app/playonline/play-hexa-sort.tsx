@@ -2,6 +2,8 @@
 
 import { Metadata } from 'next';
 import HexaSortPageClient from './page';
+import Ads from '@/components/Ads';  // 确保广告组件路径正确
+
 
 export const metadata: Metadata = {
   title: 'Play Perfect Tidy Online - Free ASMR Organizing & Puzzle Game',
@@ -23,5 +25,10 @@ export const metadata: Metadata = {
 };
 
 export default function HexaSortPage() {
+  {/* 顶部广告 */}
+  <Ads />
+
   return <HexaSortPageClient />;
+
+  
 }
